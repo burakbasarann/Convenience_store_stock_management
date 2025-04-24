@@ -1,0 +1,22 @@
+package com.basaran.casestudy.data.model
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import java.util.Date
+
+@Entity(tableName = "transactions")
+data class Transaction(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+    val date: Date,
+    val type: TransactionType,
+    val productId: Long,
+    val quantity: Int,
+    val notes: String?
+)
+
+enum class TransactionType {
+    SALE,
+    VOID,
+    CANCEL
+}
