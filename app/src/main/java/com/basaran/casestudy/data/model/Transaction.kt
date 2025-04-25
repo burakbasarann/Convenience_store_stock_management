@@ -17,6 +17,5 @@ data class Transaction(
 
 enum class TransactionType {
     SALE,
-    VOID,
     CANCEL
 }

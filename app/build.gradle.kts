@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.basaran.casestudy"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.basaran.casestudy"
