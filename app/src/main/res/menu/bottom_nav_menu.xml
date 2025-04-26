@@ -1,8 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/nav_products"
+        android:id="@+id/dashboardFragment"
         android:icon="@drawable/ic_home"
-        android:title="AnaSayfa" />
+        android:title="Anasayfa" />
+    <item
+        android:id="@+id/productsFragment"
+        android:icon="@drawable/ic_products"
+        android:title="Ürünler" />
     <item
         android:id="@+id/nav_suppliers"
         android:icon="@drawable/ic_suppliers"

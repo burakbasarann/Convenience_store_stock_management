@@ -35,10 +35,9 @@ class DashboardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        //TODO Maybe Item Detail
         setupRecyclerViews()
         observeViewModel()
-        setupBottomNavigation()
     }
 
     private fun setupRecyclerViews() {
@@ -56,12 +55,6 @@ class DashboardFragment : Fragment() {
         viewModel.recentTransactions.observe(viewLifecycleOwner) { transactions ->
             recentTransactionsAdapter = RecentTransactionsAdapter(transactions, allProducts)
             binding.recentTransactionsRecyclerView.adapter = recentTransactionsAdapter
-        }
-    }
-
-    private fun setupBottomNavigation() {
-        binding.bottomNavigationView.setOnItemSelectedListener { item ->
-             true
         }
     }
 

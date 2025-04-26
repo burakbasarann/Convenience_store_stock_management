@@ -19,4 +19,9 @@
         android:id="@+id/dashboardFragment"
         android:name="com.basaran.casestudy.ui.dashboard.DashboardFragment"
         android:label="DashboardFragment" />
+
+    <fragment
+        android:id="@+id/productsFragment"
+        android:name="com.basaran.casestudy.ui.products.ProductsFragment"
+        android:label="ProductsFragment" />
 </navigation> 
