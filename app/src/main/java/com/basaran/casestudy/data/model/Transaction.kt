@@ -8,7 +8,7 @@ import java.util.Date
 data class Transaction(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val date: Date,
+    val date: Long,
     val type: TransactionType,
     val productId: Long,
     val quantity: Int,
@@ -17,5 +17,5 @@ data class Transaction(
 
 enum class TransactionType {
     SALE,
-    CANCEL
+    RESTOCK
 }

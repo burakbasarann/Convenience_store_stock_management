@@ -15,7 +15,7 @@ import com.basaran.casestudy.data.model.Transaction
     version = 1,
     exportSchema = false
 )
-@TypeConverters(Converters::class)
+
 abstract class StoreDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
     abstract fun supplierDao(): SupplierDao

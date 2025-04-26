@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.basaran.casestudy.utils.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,7 +25,8 @@ class LoginViewModel @Inject constructor() : ViewModel() {
         _loginState.value = LoginState.Loading
 
         viewModelScope.launch {
-            if (username == "admin" && password == "admin123") {
+            delay(1000)
+            if (username == "1" && password == "1") {
                 _loginState.value = LoginState.Success
             } else {
                 _loginState.value = LoginState.Error("Kullanıcı veya Şifre Yanlış")
