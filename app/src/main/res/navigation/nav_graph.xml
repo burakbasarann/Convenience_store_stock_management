@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/loginFragment">
 
@@ -23,5 +24,16 @@
     <fragment
         android:id="@+id/productsFragment"
         android:name="com.basaran.casestudy.ui.products.ProductsFragment"
-        android:label="ProductsFragment" />
+        android:label="ProductsFragment">
+        <action
+            android:id="@+id/action_productsFragment_to_addOrEditProductFragment"
+            app:destination="@id/addOrEditProductFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addOrEditProductFragment"
+        android:name="com.basaran.casestudy.ui.products.addeditproduct.AddOrEditProductFragment"
+        android:label="fragment_add_or_edit_product"
+        tools:layout="@layout/fragment_add_or_edit_product">
+    </fragment>
 </navigation> 

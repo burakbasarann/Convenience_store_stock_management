@@ -8,7 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.basaran.casestudy.R
+import com.basaran.casestudy.data.model.Product
 import com.basaran.casestudy.databinding.FragmentProductsBinding
 import com.basaran.casestudy.ui.adapter.ProductsAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,6 +26,8 @@ class ProductsFragment : Fragment() {
     private val viewModel: ProductsViewModel by viewModels()
 
     private lateinit var productsAdapter: ProductsAdapter
+    private var isInEditMode = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,13 +44,19 @@ class ProductsFragment : Fragment() {
         observeViewModel()
         setupSearch()
         setupAddProductButton()
+        setupEditProductButton()
     }
 
     private fun setupRecyclerView() {
         binding.productsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        productsAdapter = ProductsAdapter { product ->
-            navigateToProductDetail(product.id)
-        }
+        productsAdapter = ProductsAdapter(
+            onItemClick = { product ->
+                navigateToProductDetail(product.id)
+            },
+            onEditClick = { product ->
+                navigateToEditProduct(product)
+            }
+        )
         binding.productsRecyclerView.adapter = productsAdapter
     }
 
@@ -71,14 +82,25 @@ class ProductsFragment : Fragment() {
 
 
     private fun setupAddProductButton() {
-        binding.addProductButton.setOnClickListener {  //TODO Add Product
-      //      findNavController().navigate(R.id.action_productsFragment_to_addEditProductFragment)
+        binding.addProductFab.setOnClickListener {
+            findNavController().navigate(R.id.action_productsFragment_to_addOrEditProductFragment)
+        }
+    }
+
+    private fun setupEditProductButton() {
+        binding.editProductFab.setOnClickListener {
+            isInEditMode = !isInEditMode
+            productsAdapter.setEditMode(isInEditMode)
         }
     }
 
     private fun navigateToProductDetail(productId: Long) {  //TODO Product Detail
      //   val action = ProductsFragmentDirections.actionProductsFragmentToProductDetailFragment(productId)
      //   findNavController().navigate(action)
+    }
+
+    private fun navigateToEditProduct(product: Product) {
+
     }
 
     override fun onDestroyView() {

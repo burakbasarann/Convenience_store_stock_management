@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.basaran.casestudy.R
 import com.basaran.casestudy.databinding.FragmentLoginBinding
-import com.basaran.casestudy.utils.LoginState
+import com.basaran.casestudy.utils.UiState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -48,20 +48,21 @@ class LoginFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.loginState.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is LoginState.Loading -> {
+                is UiState.Loading -> {
                     binding.progressBar.isVisible = true
                     binding.loginButton.isEnabled = false
                 }
-                is LoginState.Success -> {
+                is UiState.Success -> {
                     binding.progressBar.isVisible = false
                     binding.loginButton.isEnabled = true
                     findNavController().navigate(R.id.action_loginFragment_to_dashboardFragment)
                 }
-                is LoginState.Error -> {
+                is UiState.Error -> {
                     binding.progressBar.isVisible = false
                     binding.loginButton.isEnabled = true
                     Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
                 }
+                is UiState.Idle -> {}
             }
         }
     }

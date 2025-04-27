@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Case Study</string>
+    <string name="product_name">Product Name</string>
+    <string name="description">Description</string>
+    <string name="price">Price</string>
+    <string name="currency_symbol">$</string> <!-- veya ₺ -->
+    <string name="category">Category</string>
+    <string name="barcode">Barcode</string>
+    <string name="current_stock">Current Stock</string>
+    <string name="min_stock">Minimum Stock</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
 </resources>

@@ -3,6 +3,7 @@ package com.basaran.casestudy.ui.products
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.basaran.casestudy.data.model.Product
 import com.basaran.casestudy.repository.ProductRepository
@@ -15,28 +16,31 @@ class ProductsViewModel @Inject constructor(
     private val productRepository: ProductRepository
 ) : ViewModel() {
 
-    private val _products = MutableLiveData<List<Product>>()
-    val products: LiveData<List<Product>> get() = _products
+    val products: LiveData<List<Product>> = productRepository.getAllProducts()
+        .asLiveData(viewModelScope.coroutineContext)
 
-    private var allProducts: List<Product> = emptyList()
+    private val _filteredProducts = MutableLiveData<List<Product>>()
+    val filteredProducts: LiveData<List<Product>> get() = _filteredProducts
 
     init {
-        loadProducts()
-    }
-
-    private fun loadProducts() {
         viewModelScope.launch {
-            allProducts = productRepository.getAllProducts()
-            _products.value = allProducts
+            productRepository.seedInitialData()
+            productRepository.getAllProducts().collect { allProducts ->
+                _filteredProducts.value = allProducts
+            }
         }
     }
 
     fun filterProducts(query: String) {
-        _products.value = if (query.isEmpty()) {
-            allProducts
-        } else {
-            allProducts.filter {
-                it.name.contains(query, ignoreCase = true)
+        viewModelScope.launch {
+            productRepository.getAllProducts().collect { allProducts ->
+                _filteredProducts.value = if (query.isEmpty()) {
+                    allProducts
+                } else {
+                    allProducts.filter {
+                        it.name.contains(query, ignoreCase = true)
+                    }
+                }
             }
         }
     }

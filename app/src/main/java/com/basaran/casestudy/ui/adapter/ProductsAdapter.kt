@@ -1,6 +1,7 @@
 package com.basaran.casestudy.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -9,17 +10,24 @@ import com.basaran.casestudy.data.model.Product
 import com.basaran.casestudy.databinding.ItemProductBinding
 
 class ProductsAdapter(
-    private val onItemClick: (Product) -> Unit
+    private val onItemClick: (Product) -> Unit,
+    private val onEditClick: (Product) -> Unit
 ) : ListAdapter<Product, ProductsAdapter.ProductViewHolder>(DiffCallback()) {
+
+    private var isEditMode: Boolean = false
 
     inner class ProductViewHolder(private val binding: ItemProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(product: Product) {
             binding.productNameTextView.text = product.name
             binding.productStockTextView.text = "Stock: ${product.currentStock}"
+            binding.editImageView.visibility = if (isEditMode) View.VISIBLE else View.GONE
 
             binding.root.setOnClickListener {
                 onItemClick(product)
+            }
+            binding.editImageView.setOnClickListener {
+                onEditClick(product)
             }
         }
     }
@@ -36,5 +44,10 @@ class ProductsAdapter(
     class DiffCallback : DiffUtil.ItemCallback<Product>() {
         override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean = oldItem.id == newItem.id
         override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean = oldItem == newItem
+    }
+
+    fun setEditMode(enabled: Boolean) {
+        isEditMode = enabled
+        notifyDataSetChanged()
     }
 }
