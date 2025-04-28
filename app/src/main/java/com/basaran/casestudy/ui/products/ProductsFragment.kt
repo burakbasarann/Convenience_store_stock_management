@@ -100,7 +100,9 @@ class ProductsFragment : Fragment() {
     }
 
     private fun navigateToEditProduct(product: Product) {
-
+        val bundle = Bundle()
+        bundle.putParcelable("product", product)
+        findNavController().navigate(R.id.action_productsFragment_to_addOrEditProductFragment, bundle)
     }
 
     override fun onDestroyView() {

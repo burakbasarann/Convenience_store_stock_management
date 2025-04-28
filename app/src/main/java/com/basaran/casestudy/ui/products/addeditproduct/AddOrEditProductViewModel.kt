@@ -29,7 +29,11 @@ class AddOrEditProductViewModel @Inject constructor(
                 _state.value = UiState.Loading
                 viewModelScope.launch {
                     try {
-                        productRepository.insertProduct(product)
+                        if (product.id == 0L) {
+                            productRepository.insertProduct(product)
+                        } else {
+                            productRepository.updateProduct(product)
+                        }
                         _state.value = UiState.Success
                     } catch (e: Exception) {
                         _state.value = UiState.Error(e.localizedMessage ?: "Error saving product")

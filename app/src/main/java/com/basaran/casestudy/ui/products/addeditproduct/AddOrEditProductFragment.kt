@@ -24,6 +24,7 @@ class AddOrEditProductFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: AddOrEditProductViewModel by viewModels()
+    private lateinit var editProduct: Product
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,7 +37,12 @@ class AddOrEditProductFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        arguments?.getParcelable<Product>("product")?.let {
+            editProduct = it
+            fillProductDetails(editProduct)
+        }?: run {
+            editProduct = Product()
+        }
         setupViews()
         observeViewModel()
         handleProductData()
@@ -95,6 +101,7 @@ class AddOrEditProductFragment : Fragment() {
             val minStock = productMinStockEditText.text.toString().toIntOrNull() ?: 0
 
             val product = Product(
+                id = editProduct.id,
                 name = name,
                 description = description,
                 price = price,
@@ -130,6 +137,16 @@ class AddOrEditProductFragment : Fragment() {
             productBarcodeInput.error = errors.find { it.field == AddOrEditProductViewModel.Field.BARCODE }?.message
             productMinStockInput.error = errors.find { it.field == AddOrEditProductViewModel.Field.MIN_STOCK }?.message
         }
+    }
+
+    private fun fillProductDetails(product: Product) {
+        binding.productNameEditText.setText(product.name)
+        binding.productDescriptionEditText.setText(product.description)
+        binding.productPriceEditText.setText(product.price.toString())
+        binding.productCategoryEditText.setText(product.category)
+        binding.productBarcodeEditText.setText(product.barcode)
+        binding.productStockEditText.setText(product.currentStock.toString())
+        binding.productMinStockEditText.setText(product.minStock.toString())
     }
 
     override fun onDestroyView() {
