@@ -9,8 +9,10 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -22,6 +24,7 @@
             android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 
     </com.google.android.material.appbar.AppBarLayout>
+
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"

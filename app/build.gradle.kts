@@ -50,6 +50,12 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
 
+    //Splash
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+    //Lottie
+    implementation("com.airbnb.android:lottie:6.4.0")
+
     // Hilt
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-android-compiler:2.48")
