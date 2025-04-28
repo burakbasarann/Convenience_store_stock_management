@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.basaran.casestudy.data.model.Product
 import com.basaran.casestudy.repository.product.ProductRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,25 +23,25 @@ class ProductsViewModel @Inject constructor(
     private val _filteredProducts = MutableLiveData<List<Product>>()
     val filteredProducts: LiveData<List<Product>> get() = _filteredProducts
 
+    private val _allProducts = MutableStateFlow<List<Product>>(emptyList())
+
     init {
         viewModelScope.launch {
             productRepository.seedInitialData()
             productRepository.getAllProducts().collect { allProducts ->
+                _allProducts.value = allProducts
                 _filteredProducts.value = allProducts
             }
         }
     }
 
     fun filterProducts(query: String) {
-        viewModelScope.launch {
-            productRepository.getAllProducts().collect { allProducts ->
-                _filteredProducts.value = if (query.isEmpty()) {
-                    allProducts
-                } else {
-                    allProducts.filter {
-                        it.name.contains(query, ignoreCase = true)
-                    }
-                }
+        val products = _allProducts.value
+        _filteredProducts.value = if (query.isEmpty()) {
+            products
+        } else {
+            products.filter {
+                it.name.contains(query, ignoreCase = true)
             }
         }
     }

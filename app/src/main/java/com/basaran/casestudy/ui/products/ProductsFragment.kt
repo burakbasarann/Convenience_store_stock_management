@@ -64,6 +64,9 @@ class ProductsFragment : Fragment() {
         viewModel.products.observe(viewLifecycleOwner) { products ->
             productsAdapter.submitList(products)
         }
+        viewModel.filteredProducts.observe(viewLifecycleOwner) { products ->
+            productsAdapter.submitList(products)
+        }
     }
 
     private fun setupSearch() {
