@@ -4,7 +4,7 @@ import com.basaran.casestudy.data.model.Supplier
 import kotlinx.coroutines.flow.Flow
 
 interface SupplierRepository {
-    suspend fun getAllSuppliers() : Flow<List<Supplier>>
+    fun getAllSuppliers() : Flow<List<Supplier>>
     suspend fun getSupplierById(supplierId: Long) : Supplier?
     suspend fun insertSupplier(supplier: Supplier)
     suspend fun updateSupplier(supplier: Supplier)

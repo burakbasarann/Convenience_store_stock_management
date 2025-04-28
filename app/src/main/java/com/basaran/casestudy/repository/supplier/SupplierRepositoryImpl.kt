@@ -13,10 +13,8 @@ import javax.inject.Singleton
 class SupplierRepositoryImpl @Inject constructor(
     private val supplierDao: SupplierDao,
 ) : SupplierRepository {
-    override suspend fun getAllSuppliers(): Flow<List<Supplier>> =
-        withContext(Dispatchers.IO) {
-            supplierDao.getAllSuppliers()
-        }
+
+    override fun getAllSuppliers(): Flow<List<Supplier>> = supplierDao.getAllSuppliers()
 
     override suspend fun getSupplierById(supplierId: Long): Supplier? =
         withContext(Dispatchers.IO) {

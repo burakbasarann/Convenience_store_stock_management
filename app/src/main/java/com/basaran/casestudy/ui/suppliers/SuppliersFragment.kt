@@ -1,19 +1,20 @@
 package com.basaran.casestudy.ui.suppliers
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.basaran.casestudy.R
-import com.basaran.casestudy.data.model.Product
 import com.basaran.casestudy.data.model.Supplier
-import com.basaran.casestudy.databinding.FragmentProductsBinding
 import com.basaran.casestudy.databinding.FragmentSuppliersBinding
-import com.basaran.casestudy.ui.adapter.ProductsAdapter
 import com.basaran.casestudy.ui.adapter.SupplierAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,6 +40,7 @@ class SuppliersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
+        setupSearch()
         setupViews()
     }
 
@@ -55,9 +57,34 @@ class SuppliersFragment : Fragment() {
         viewModel.suppliers.observe(viewLifecycleOwner) { suppliers ->
             supplierAdapter.submitList(suppliers)
         }
+
+        viewModel.filteredSuppliers.observe(viewLifecycleOwner) { suppliers ->
+            supplierAdapter.submitList(suppliers)
+        }
     }
 
     private fun setupViews() {
+        val adapter = ArrayAdapter.createFromResource(requireContext(), R.array.filter_options, android.R.layout.simple_spinner_item)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.filterSpinner.adapter = adapter;
+
+        binding.filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parentView: AdapterView<*>?,
+                selectedItemView: View,
+                position: Int,
+                id: Long
+            ) {
+                when (position) {
+                    0 -> viewModel.sortSuppliersAscending()
+                    1 -> viewModel.sortSuppliersDescending()
+                }
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+            }
+        }
+
         binding.fabAddSupplier.setOnClickListener {
             findNavController().navigate(R.id.action_suppliersFragment_to_addOrEditSupplierFragment)
         }
@@ -67,6 +94,21 @@ class SuppliersFragment : Fragment() {
         bundle.putParcelable("supplier", supplier)
         findNavController().navigate(R.id.action_suppliersFragment_to_addOrEditSupplierFragment, bundle)
     }
+
+    private fun setupSearch() {
+        binding.searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { //TODO Buraya Bak
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { //TODO Buraya Bak
+            }
+
+            override fun afterTextChanged(editable: Editable?) {
+                viewModel.filterSuppliers(editable.toString())
+            }
+        })
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
