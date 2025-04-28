@@ -14,11 +14,12 @@ class SupplierRepositoryImpl @Inject constructor(
     private val supplierDao: SupplierDao,
 ) : SupplierRepository {
 
-    override fun getAllSuppliers(): Flow<List<Supplier>> = supplierDao.getAllSuppliers()
+    override fun getAllSuppliers(userId: String): Flow<List<Supplier>> =
+        supplierDao.getAllSuppliers(userId)
 
-    override suspend fun getSupplierById(supplierId: Long): Supplier? =
+    override suspend fun getSupplierById(supplierId: Long, userId: String): Supplier? =
         withContext(Dispatchers.IO) {
-            supplierDao.getSupplierById(supplierId)
+            supplierDao.getSupplierById(supplierId, userId)
         }
 
     override suspend fun insertSupplier(supplier: Supplier) {
@@ -39,29 +40,30 @@ class SupplierRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun searchSuppliers(query: String): Flow<List<Supplier>> =
-        supplierDao.searchSuppliers(query)
+    override fun searchSuppliers(userId: String, query: String): Flow<List<Supplier>> =
+        supplierDao.searchSuppliers(userId, query)
 
-    override suspend fun seedInitialData() {
-        if (supplierDao.getAllSuppliers().first().isEmpty()) {
-            val initialSupplier = listOf(
+    override suspend fun seedInitialData(userId: String) = withContext(Dispatchers.IO) {
+        if (supplierDao.getAllSuppliers(userId).first().isEmpty()) {
+            val initialSuppliers = listOf(
                 Supplier(
                     name = "A Firması",
                     contactPerson = "Ahmet",
                     phone = "55555555",
                     email = "aaaa@gmail.com",
-                    address = ""
+                    address = "",
+                    userId = userId
                 ),
                 Supplier(
                     name = "B Firması",
                     contactPerson = "Alp",
                     phone = "55555555",
                     email = "aaaa@gmail.com",
-                    address = ""
-                ),
-
+                    address = "",
+                    userId = userId
                 )
-            initialSupplier.forEach { supplierDao.insertSupplier(it) }
+            )
+            initialSuppliers.forEach { supplierDao.insertSupplier(it) }
         }
     }
 }

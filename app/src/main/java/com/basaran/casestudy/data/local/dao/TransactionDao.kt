@@ -6,14 +6,15 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TransactionDao {
-    @Query("SELECT * FROM transactions ORDER BY date DESC")
-    fun getAllTransactions(): Flow<List<Transaction>>
 
-    @Query("SELECT * FROM transactions WHERE id = :id")
-    suspend fun getTransactionById(id: Long): Transaction?
+    @Query("SELECT * FROM transactions WHERE userId = :userId ORDER BY date DESC")
+    fun getAllTransactions(userId: String): Flow<List<Transaction>>
 
-    @Query("SELECT * FROM transactions WHERE productId = :productId ORDER BY date DESC")
-    fun getTransactionsByProduct(productId: Long): Flow<List<Transaction>>
+    @Query("SELECT * FROM transactions WHERE id = :id AND userId = :userId")
+    suspend fun getTransactionById(id: Long, userId: String): Transaction?
+
+    @Query("SELECT * FROM transactions WHERE productId = :productId AND userId = :userId ORDER BY date DESC")
+    fun getTransactionsByProduct(productId: Long, userId: String): Flow<List<Transaction>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransaction(transaction: Transaction)
@@ -23,4 +24,4 @@ interface TransactionDao {
 
     @Delete
     suspend fun deleteTransaction(transaction: Transaction)
-} 
+}

@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class Transaction(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
+    val userId: String,
     val date: Long,
     val type: TransactionType,
     val productId: Long,

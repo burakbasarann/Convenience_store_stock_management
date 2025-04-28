@@ -43,6 +43,12 @@ class LoginFragment : Fragment() {
             val password = binding.passwordEditText.text.toString()
             viewModel.login(username, password)
         }
+
+        binding.registerButton.setOnClickListener {
+            val username = binding.usernameEditText.text.toString()
+            val password = binding.passwordEditText.text.toString()
+            viewModel.register(username, password)
+        }
     }
 
     private fun observeViewModel() {

@@ -7,6 +7,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.basaran.casestudy.data.model.Supplier
 import com.basaran.casestudy.repository.supplier.SupplierRepository
+import com.basaran.casestudy.utils.UserManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -17,7 +18,7 @@ class SuppliersViewModel @Inject constructor(
     private val supplierRepository: SupplierRepository
 ) : ViewModel() {
 
-    val suppliers: LiveData<List<Supplier>> = supplierRepository.getAllSuppliers()
+    val suppliers: LiveData<List<Supplier>> = supplierRepository.getAllSuppliers(UserManager.getUserId())
         .asLiveData(viewModelScope.coroutineContext)
 
     private val _filteredPSuppliers = MutableLiveData<List<Supplier>>()
@@ -31,8 +32,8 @@ class SuppliersViewModel @Inject constructor(
 
     private fun getSuppliers() {
         viewModelScope.launch {
-            supplierRepository.seedInitialData()
-            supplierRepository.getAllSuppliers().collect { list ->
+            supplierRepository.seedInitialData(UserManager.getUserId())
+            supplierRepository.getAllSuppliers(UserManager.getUserId()).collect { list ->
                 _allSuppliers.value = list
                 _filteredPSuppliers.value = list
             }

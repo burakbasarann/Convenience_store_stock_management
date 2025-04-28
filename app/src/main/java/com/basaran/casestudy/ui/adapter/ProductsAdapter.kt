@@ -20,8 +20,9 @@ class ProductsAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(product: Product) {
             binding.productNameTextView.text = product.name
-            binding.productStockTextView.text = "Stock: ${product.currentStock}"
+            binding.productStockTextView.text = "Stok: ${product.currentStock} - Minimum Stok: ${product.minStock}"
             binding.productPriceEditText.text = "Price: ${product.price} ₺"
+            binding.productId.text = "Product: ${product.id}"
             binding.editImageView.visibility = if (isEditMode) View.VISIBLE else View.GONE
 
             binding.root.setOnClickListener {

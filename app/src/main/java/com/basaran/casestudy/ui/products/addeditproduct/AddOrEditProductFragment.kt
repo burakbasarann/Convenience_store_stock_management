@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.basaran.casestudy.data.model.Product
 import com.basaran.casestudy.databinding.FragmentAddOrEditProductBinding
 import com.basaran.casestudy.utils.UiState
+import com.basaran.casestudy.utils.UserManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -97,6 +98,7 @@ class AddOrEditProductFragment : Fragment() {
 
             val product = Product(
                 id = editProduct.id,
+                userId = UserManager.getUserId(),
                 name = name,
                 description = description,
                 price = price,

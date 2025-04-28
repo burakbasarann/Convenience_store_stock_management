@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.basaran.casestudy.data.model.Product
+import com.basaran.casestudy.data.model.Transaction
 import com.basaran.casestudy.databinding.FragmentDashboardBinding
 import com.basaran.casestudy.ui.adapter.LowStockAdapter
 import com.basaran.casestudy.ui.adapter.RecentTransactionsAdapter
@@ -22,7 +23,9 @@ class DashboardFragment : Fragment() {
     private val viewModel: DashboardViewModel by viewModels()
     private lateinit var lowStockAdapter: LowStockAdapter
     private lateinit var recentTransactionsAdapter: RecentTransactionsAdapter
+    private var filterProducts: List<Product> = emptyList()
     private var allProducts: List<Product> = emptyList()
+    private var allTransactions: List<Transaction> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,14 +50,29 @@ class DashboardFragment : Fragment() {
 
     private fun observeViewModel() {
         viewModel.lowStockProducts.observe(viewLifecycleOwner) { products ->
-            allProducts = products
-            lowStockAdapter = LowStockAdapter(products)
-            binding.lowStockRecyclerView.adapter = lowStockAdapter
+            filterProducts = products
+            updateAdapter()
         }
 
         viewModel.recentTransactions.observe(viewLifecycleOwner) { transactions ->
-            recentTransactionsAdapter = RecentTransactionsAdapter(transactions, allProducts)
+            allTransactions = transactions
+            updateAdapter()
+        }
+
+        viewModel.allProducts.observe(viewLifecycleOwner) { allProductsDb ->
+            allProducts = allProductsDb
+            updateAdapter()
+        }
+    }
+
+    private fun updateAdapter() {
+        if (allTransactions.isNotEmpty()) {
+            recentTransactionsAdapter = RecentTransactionsAdapter(allTransactions, allProducts)
             binding.recentTransactionsRecyclerView.adapter = recentTransactionsAdapter
+        }
+        if (allProducts.isNotEmpty()) {
+            lowStockAdapter = LowStockAdapter(filterProducts)
+            binding.lowStockRecyclerView.adapter = lowStockAdapter
         }
     }
 

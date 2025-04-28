@@ -14,11 +14,12 @@ class ProductRepositoryImpl @Inject constructor(
     private val productDao: ProductDao,
 ) : ProductRepository {
 
-    override fun getAllProducts(): Flow<List<Product>> = productDao.getAllProducts()
+    override fun getAllProducts(userId: String): Flow<List<Product>> =
+        productDao.getAllProducts(userId)
 
-    override suspend fun getProductById(productId: Long): Product? =
+    override suspend fun getProductById(productId: Long, userId: String): Product? =
         withContext(Dispatchers.IO) {
-            productDao.getProductById(productId)
+            productDao.getProductById(productId, userId)
         }
 
     override suspend fun insertProduct(product: Product) {
@@ -33,9 +34,9 @@ class ProductRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getLowStockProducts(): Flow<List<Product>> =
+    override suspend fun getLowStockProducts(userId: String): Flow<List<Product>> =
         withContext(Dispatchers.IO) {
-            productDao.getLowStockProducts()
+            productDao.getLowStockProducts(userId)
         }
 
     override suspend fun deleteProduct(product: Product) {
@@ -44,21 +45,33 @@ class ProductRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun searchProducts(query: String): Flow<List<Product>> =
-        productDao.searchProducts(query)
+    override fun searchProducts(userId: Int, query: String): Flow<List<Product>> =
+        productDao.searchProducts(userId, query)
 
-    override suspend fun seedInitialData() = withContext(Dispatchers.IO) {
-        if (productDao.getAllProducts().first().isEmpty()) {
+    override suspend fun seedInitialData(userId: String) = withContext(Dispatchers.IO) {
+        if (productDao.getAllProducts(userId).first().isEmpty()) {
             val initialProducts = listOf(
                 Product(
-                    name = "Ülker Çikolatalı Gofret", description = "", price = 15.0,
-                    category = "Atıştırmalık", barcode = "123456", supplierId = 1,
-                    currentStock = 2, minStock = 10
+                    name = "Ülker Çikolatalı Gofret",
+                    description = "",
+                    price = 15.0,
+                    category = "Atıştırmalık",
+                    barcode = "123456",
+                    supplierId = 1,
+                    currentStock = 2,
+                    minStock = 10,
+                    userId = userId
                 ),
                 Product(
-                    name = "Su", description = "0.5L Doğal Su", price = 5.0,
-                    category = "İçecek", barcode = "654321", supplierId = 2,
-                    currentStock = 3, minStock = 10
+                    name = "Su",
+                    description = "0.5L Doğal Su",
+                    price = 5.0,
+                    category = "İçecek",
+                    barcode = "654321",
+                    supplierId = 2,
+                    currentStock = 3,
+                    minStock = 10,
+                    userId = userId
                 )
             )
             initialProducts.forEach { productDao.insertProduct(it) }

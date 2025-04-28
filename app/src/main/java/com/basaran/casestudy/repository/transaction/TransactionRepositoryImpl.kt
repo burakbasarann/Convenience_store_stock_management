@@ -12,17 +12,20 @@ import javax.inject.Singleton
 class TransactionRepositoryImpl @Inject constructor(
     private val transactionDao: TransactionDao
 ) : TransactionRepository {
-    override suspend fun getAllTransactions(): Flow<List<Transaction>> =
-        transactionDao.getAllTransactions()
 
-    override suspend fun getTransactionById(transactionId: Long): Transaction? =
+    override suspend fun getAllTransactions(userId: String): Flow<List<Transaction>> =
         withContext(Dispatchers.IO) {
-            transactionDao.getTransactionById(transactionId)
+            transactionDao.getAllTransactions(userId)
         }
 
-    override suspend fun getTransactionsByProduct(productId: Long): Flow<List<Transaction>> =
+    override suspend fun getTransactionById(transactionId: Long, userId: String): Transaction? =
         withContext(Dispatchers.IO) {
-            transactionDao.getTransactionsByProduct(productId)
+            transactionDao.getTransactionById(transactionId, userId)
+        }
+
+    override suspend fun getTransactionsByProduct(productId: Long, userId: String): Flow<List<Transaction>> =
+        withContext(Dispatchers.IO) {
+            transactionDao.getTransactionsByProduct(productId, userId)
         }
 
     override suspend fun insertTransaction(transaction: Transaction) {

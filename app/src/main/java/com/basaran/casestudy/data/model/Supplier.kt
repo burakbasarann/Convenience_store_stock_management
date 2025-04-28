@@ -10,6 +10,7 @@ import kotlinx.parcelize.Parcelize
 data class Supplier(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
+    val userId: String = "",
     val name: String = "",
     val contactPerson: String = "",
     val phone: String = "",

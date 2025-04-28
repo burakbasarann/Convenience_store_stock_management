@@ -8,6 +8,7 @@ import com.basaran.casestudy.data.model.Product
 import com.basaran.casestudy.data.model.Transaction
 import com.basaran.casestudy.repository.product.ProductRepository
 import com.basaran.casestudy.repository.transaction.TransactionRepository
+import com.basaran.casestudy.utils.UserManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,14 +25,23 @@ class DashboardViewModel @Inject constructor(
     private val _recentTransactions = MutableLiveData<List<Transaction>>()
     val recentTransactions: LiveData<List<Transaction>> get() = _recentTransactions
 
+    private val _allProducts = MutableLiveData<List<Product>>(emptyList())
+    val allProducts: LiveData<List<Product>> get() = _allProducts
+
     init {
         getLowStockProducts()
         getRecentTransactions()
+
+        viewModelScope.launch {
+            productRepository.getAllProducts(UserManager.getUserId()).collect { allProducts ->
+                _allProducts.value = allProducts
+            }
+        }
     }
 
     private fun getLowStockProducts() {
         viewModelScope.launch {
-            productRepository.getLowStockProducts().collect { products ->
+            productRepository.getLowStockProducts(UserManager.getUserId()).collect { products ->
                 _lowStockProducts.postValue(products)
             }
         }
@@ -39,7 +49,7 @@ class DashboardViewModel @Inject constructor(
 
     private fun getRecentTransactions() {
         viewModelScope.launch {
-            transactionRepository.getAllTransactions().collect { products ->
+            transactionRepository.getAllTransactions(UserManager.getUserId()).collect { products ->
                 _recentTransactions.postValue(products)
             }
         }

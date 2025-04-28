@@ -7,6 +7,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.basaran.casestudy.data.model.Product
 import com.basaran.casestudy.repository.product.ProductRepository
+import com.basaran.casestudy.utils.UserManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -17,7 +18,7 @@ class ProductsViewModel @Inject constructor(
     private val productRepository: ProductRepository
 ) : ViewModel() {
 
-    val products: LiveData<List<Product>> = productRepository.getAllProducts()
+    val products: LiveData<List<Product>> = productRepository.getAllProducts(UserManager.getUserId())
         .asLiveData(viewModelScope.coroutineContext)
 
     private val _filteredProducts = MutableLiveData<List<Product>>()
@@ -27,8 +28,8 @@ class ProductsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            productRepository.seedInitialData()
-            productRepository.getAllProducts().collect { allProducts ->
+            productRepository.seedInitialData(UserManager.getUserId())
+            productRepository.getAllProducts(UserManager.getUserId()).collect { allProducts ->
                 _allProducts.value = allProducts
                 _filteredProducts.value = allProducts
             }

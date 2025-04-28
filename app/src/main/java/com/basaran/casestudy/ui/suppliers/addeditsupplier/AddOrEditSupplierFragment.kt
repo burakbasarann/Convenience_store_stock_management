@@ -17,6 +17,7 @@ import com.basaran.casestudy.databinding.FragmentAddOrEditProductBinding
 import com.basaran.casestudy.databinding.FragmentAddOrEditSupplierBinding
 import com.basaran.casestudy.ui.products.addeditproduct.AddOrEditProductViewModel
 import com.basaran.casestudy.utils.UiState
+import com.basaran.casestudy.utils.UserManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -129,6 +130,7 @@ class AddOrEditSupplierFragment : Fragment() {
 
             val supplier = Supplier(
                 id = editSupplier.id,
+                userId = UserManager.getUserId(),
                 name = name,
                 contactPerson = contact,
                 phone = phone,

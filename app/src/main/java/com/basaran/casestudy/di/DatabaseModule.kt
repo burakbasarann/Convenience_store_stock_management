@@ -34,4 +34,7 @@ object DatabaseModule {
 
     @Provides
     fun provideTransactionDao(database: StoreDatabase) = database.transactionDao()
+
+    @Provides
+    fun provideUserDao(database: StoreDatabase) = database.userDao()
 } 

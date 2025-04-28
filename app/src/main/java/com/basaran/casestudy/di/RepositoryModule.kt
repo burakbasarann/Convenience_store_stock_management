@@ -6,6 +6,8 @@ import com.basaran.casestudy.repository.supplier.SupplierRepository
 import com.basaran.casestudy.repository.supplier.SupplierRepositoryImpl
 import com.basaran.casestudy.repository.transaction.TransactionRepository
 import com.basaran.casestudy.repository.transaction.TransactionRepositoryImpl
+import com.basaran.casestudy.repository.user.UserRepository
+import com.basaran.casestudy.repository.user.UserRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,4 +35,11 @@ abstract class RepositoryModule {
     abstract fun bindSupplierRepository(
         supplierRepositoryImpl: SupplierRepositoryImpl
     ): SupplierRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindUserRepository(
+        userRepositoryImpl: UserRepositoryImpl
+    ): UserRepository
 }
+

@@ -71,10 +71,11 @@ class SuppliersFragment : Fragment() {
         binding.filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parentView: AdapterView<*>?,
-                selectedItemView: View,
+                selectedItemView: View?,
                 position: Int,
                 id: Long
             ) {
+                if (selectedItemView == null) return
                 when (position) {
                     0 -> viewModel.sortSuppliersAscending()
                     1 -> viewModel.sortSuppliersDescending()
