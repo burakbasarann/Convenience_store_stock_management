@@ -16,7 +16,7 @@ interface TransactionDao {
     fun getTransactionsByProduct(productId: Long): Flow<List<Transaction>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTransaction(transaction: Transaction): Long
+    suspend fun insertTransaction(transaction: Transaction)
 
     @Update
     suspend fun updateTransaction(transaction: Transaction)

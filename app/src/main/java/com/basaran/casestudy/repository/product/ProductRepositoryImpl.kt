@@ -1,4 +1,4 @@
-package com.basaran.casestudy.repository
+package com.basaran.casestudy.repository.product
 
 import com.basaran.casestudy.data.local.dao.ProductDao
 import com.basaran.casestudy.data.model.Product
@@ -33,6 +33,11 @@ class ProductRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getLowStockProducts(): Flow<List<Product>> =
+        withContext(Dispatchers.IO) {
+            productDao.getLowStockProducts()
+        }
+
     override suspend fun deleteProduct(product: Product) {
         withContext(Dispatchers.IO) {
             productDao.deleteProduct(product)
@@ -45,12 +50,16 @@ class ProductRepositoryImpl @Inject constructor(
     override suspend fun seedInitialData() = withContext(Dispatchers.IO) {
         if (productDao.getAllProducts().first().isEmpty()) {
             val initialProducts = listOf(
-                Product(name = "Ülker Çikolatalı Gofret", description = "", price = 15.0,
+                Product(
+                    name = "Ülker Çikolatalı Gofret", description = "", price = 15.0,
                     category = "Atıştırmalık", barcode = "123456", supplierId = 1,
-                    currentStock = 2, minStock = 10),
-                Product(name = "Su", description = "0.5L Doğal Su", price = 5.0,
+                    currentStock = 2, minStock = 10
+                ),
+                Product(
+                    name = "Su", description = "0.5L Doğal Su", price = 5.0,
                     category = "İçecek", barcode = "654321", supplierId = 2,
-                    currentStock = 3, minStock = 10)
+                    currentStock = 3, minStock = 10
+                )
             )
             initialProducts.forEach { productDao.insertProduct(it) }
         }

@@ -1,7 +1,9 @@
 package com.basaran.casestudy.di
 
-import com.basaran.casestudy.repository.ProductRepository
-import com.basaran.casestudy.repository.ProductRepositoryImpl
+import com.basaran.casestudy.repository.product.ProductRepository
+import com.basaran.casestudy.repository.product.ProductRepositoryImpl
+import com.basaran.casestudy.repository.transaction.TransactionRepository
+import com.basaran.casestudy.repository.transaction.TransactionRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,4 +19,10 @@ abstract class RepositoryModule {
     abstract fun bindProductRepository(
         productRepositoryImpl: ProductRepositoryImpl
     ): ProductRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindTransactionRepository(
+        transactionRepositoryImpl: TransactionRepositoryImpl
+    ): TransactionRepository
 }
