@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,24 +15,19 @@ import com.basaran.casestudy.R
 import com.basaran.casestudy.data.model.Supplier
 import com.basaran.casestudy.databinding.FragmentSuppliersBinding
 import com.basaran.casestudy.ui.adapter.SupplierAdapter
+import com.basaran.casestudy.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class SuppliersFragment : Fragment() {
-
-    private var _binding: FragmentSuppliersBinding? = null
-    private val binding get() = _binding!!
+class SuppliersFragment : BaseFragment<FragmentSuppliersBinding>() {
 
     private lateinit var supplierAdapter: SupplierAdapter
     private val viewModel: SuppliersViewModel by viewModels()
+    override fun showLoading(isLoading: Boolean) {}
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentSuppliersBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentSuppliersBinding {
+        return FragmentSuppliersBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,8 +59,8 @@ class SuppliersFragment : Fragment() {
 
     private fun setupViews() {
         val adapter = ArrayAdapter.createFromResource(requireContext(), R.array.filter_options, android.R.layout.simple_spinner_item)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.filterSpinner.adapter = adapter;
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.filterSpinner.adapter = adapter
 
         binding.filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -108,11 +102,5 @@ class SuppliersFragment : Fragment() {
                 viewModel.filterSuppliers(editable.toString())
             }
         })
-    }
-
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

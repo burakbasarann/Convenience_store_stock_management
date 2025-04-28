@@ -4,7 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.basaran.casestudy.data.model.Product
@@ -12,13 +13,12 @@ import com.basaran.casestudy.data.model.Transaction
 import com.basaran.casestudy.databinding.FragmentDashboardBinding
 import com.basaran.casestudy.ui.adapter.LowStockAdapter
 import com.basaran.casestudy.ui.adapter.RecentTransactionsAdapter
+import com.basaran.casestudy.ui.base.BaseFragment
+import com.basaran.casestudy.utils.UiState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DashboardFragment : Fragment() {
-
-    private var _binding: FragmentDashboardBinding? = null
-    private val binding get() = _binding!!
+class DashboardFragment : BaseFragment<FragmentDashboardBinding>() {
 
     private val viewModel: DashboardViewModel by viewModels()
     private lateinit var lowStockAdapter: LowStockAdapter
@@ -27,18 +27,16 @@ class DashboardFragment : Fragment() {
     private var allProducts: List<Product> = emptyList()
     private var allTransactions: List<Transaction> = emptyList()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun showLoading(isLoading: Boolean) {
+        binding.progressBar.isVisible = isLoading
+    }
+
+    override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentDashboardBinding {
+        return FragmentDashboardBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //TODO Maybe Item Detail
         setupRecyclerViews()
         observeViewModel()
     }
@@ -63,6 +61,25 @@ class DashboardFragment : Fragment() {
             allProducts = allProductsDb
             updateAdapter()
         }
+
+        viewModel.uiState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    setLoadingState(true)
+                }
+
+                is UiState.Success -> {
+                    setLoadingState(false)
+                }
+
+                is UiState.Error -> {
+                    setLoadingState(false)
+                    Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                }
+
+                is UiState.Idle -> {}
+            }
+        }
     }
 
     private fun updateAdapter() {
@@ -74,10 +91,5 @@ class DashboardFragment : Fragment() {
             lowStockAdapter = LowStockAdapter(filterProducts)
             binding.lowStockRecyclerView.adapter = lowStockAdapter
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 } 

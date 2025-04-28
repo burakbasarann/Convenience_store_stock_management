@@ -1,7 +1,6 @@
 package com.basaran.casestudy.ui.products.addeditproduct
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.basaran.casestudy.data.model.Product
 import com.basaran.casestudy.databinding.FragmentAddOrEditProductBinding
+import com.basaran.casestudy.ui.base.BaseFragment
 import com.basaran.casestudy.utils.UiState
 import com.basaran.casestudy.utils.UserManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,22 +19,10 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class AddOrEditProductFragment : Fragment() {
-
-    private var _binding: FragmentAddOrEditProductBinding? = null
-    private val binding get() = _binding!!
+class AddOrEditProductFragment : BaseFragment<FragmentAddOrEditProductBinding>() {
 
     private val viewModel: AddOrEditProductViewModel by viewModels()
     private lateinit var editProduct: Product
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentAddOrEditProductBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -113,9 +101,13 @@ class AddOrEditProductFragment : Fragment() {
     }
 
 
-    private fun showLoading(isLoading: Boolean) {
+    override fun showLoading(isLoading: Boolean) {
         binding.progressBar.isVisible = isLoading
         binding.saveButton.isEnabled = !isLoading
+    }
+
+    override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentAddOrEditProductBinding {
+        return FragmentAddOrEditProductBinding.inflate(inflater, container, false)
     }
 
     private fun handleSuccess() {
@@ -144,10 +136,5 @@ class AddOrEditProductFragment : Fragment() {
         binding.productBarcodeEditText.setText(product.barcode)
         binding.productStockEditText.setText(product.currentStock.toString())
         binding.productMinStockEditText.setText(product.minStock.toString())
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

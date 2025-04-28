@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.basaran.casestudy.R
@@ -17,27 +16,21 @@ import com.basaran.casestudy.data.model.Transaction
 import com.basaran.casestudy.data.model.TransactionType
 import com.basaran.casestudy.databinding.FragmentTransactionBinding
 import com.basaran.casestudy.ui.adapter.RecentTransactionsAdapter
+import com.basaran.casestudy.ui.base.BaseFragment
 import com.basaran.casestudy.utils.UserManager
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TransactionFragment : Fragment() {
-
-    private var _binding: FragmentTransactionBinding? = null
-    private val binding get() = _binding!!
+class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
 
     private val viewModel: TransactionViewModel by viewModels()
-
     private lateinit var transactionAdapter: RecentTransactionsAdapter
     private var transactionsList: List<Transaction> = emptyList()
     private var productsList: List<Product> = emptyList()
+    override fun showLoading(isLoading: Boolean) {}
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentTransactionBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentTransactionBinding {
+        return FragmentTransactionBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -88,7 +81,7 @@ class TransactionFragment : Fragment() {
         val editTextQuantity = dialogView.findViewById<EditText>(R.id.editTextQuantity)
         val editTextNotes = dialogView.findViewById<EditText>(R.id.editTextNotes)
 
-        val types = TransactionType.values().map { it.name }
+        val types = TransactionType.entries.map { it.name }
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, types)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerTransactionType.adapter = adapter
@@ -125,10 +118,5 @@ class TransactionFragment : Fragment() {
                 dialog.dismiss()
             }
             .show()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

@@ -7,8 +7,10 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.basaran.casestudy.data.model.Product
 import com.basaran.casestudy.repository.product.ProductRepository
+import com.basaran.casestudy.utils.UiState
 import com.basaran.casestudy.utils.UserManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,13 +28,24 @@ class ProductsViewModel @Inject constructor(
 
     private val _allProducts = MutableStateFlow<List<Product>>(emptyList())
 
+    private val _uiState = MutableLiveData<UiState>()
+    val uiState: LiveData<UiState> get() = _uiState
+
     init {
         viewModelScope.launch {
-            productRepository.seedInitialData(UserManager.getUserId())
-            productRepository.getAllProducts(UserManager.getUserId()).collect { allProducts ->
-                _allProducts.value = allProducts
-                _filteredProducts.value = allProducts
+            try {
+                _uiState.postValue(UiState.Loading)
+                delay(300)
+                productRepository.seedInitialData(UserManager.getUserId())
+                productRepository.getAllProducts(UserManager.getUserId()).collect { allProducts ->
+                    _uiState.postValue(UiState.Success)
+                    _allProducts.value = allProducts
+                    _filteredProducts.value = allProducts
+                }
+            } catch (e:Exception) {
+                _uiState.postValue(UiState.Error(e.localizedMessage ?: "Bir hata oluştu"))
             }
+
         }
     }
 

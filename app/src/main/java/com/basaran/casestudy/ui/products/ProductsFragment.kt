@@ -3,12 +3,13 @@ package com.basaran.casestudy.ui.products
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,27 +17,24 @@ import com.basaran.casestudy.R
 import com.basaran.casestudy.data.model.Product
 import com.basaran.casestudy.databinding.FragmentProductsBinding
 import com.basaran.casestudy.ui.adapter.ProductsAdapter
+import com.basaran.casestudy.ui.base.BaseFragment
+import com.basaran.casestudy.utils.UiState
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class ProductsFragment : Fragment() {
-
-    private var _binding: FragmentProductsBinding? = null
-    private val binding get() = _binding!!
-
+class ProductsFragment : BaseFragment<FragmentProductsBinding>() {
     private val viewModel: ProductsViewModel by viewModels()
 
     private lateinit var productsAdapter: ProductsAdapter
     private var isInEditMode = false
 
+    override fun showLoading(isLoading: Boolean) {
+        binding.progressBar.isVisible = isLoading
+    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentProductsBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentProductsBinding {
+        return FragmentProductsBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,8 +49,8 @@ class ProductsFragment : Fragment() {
 
     private fun setupRecyclerView() {
         val adapter = ArrayAdapter.createFromResource(requireContext(), R.array.filter_options_product, android.R.layout.simple_spinner_item)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.filterSpinner.adapter = adapter;
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.filterSpinner.adapter = adapter
 
         binding.filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -92,6 +90,25 @@ class ProductsFragment : Fragment() {
         }
         viewModel.filteredProducts.observe(viewLifecycleOwner) { products ->
             productsAdapter.submitList(products)
+        }
+
+        viewModel.uiState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    setLoadingState(true)
+                }
+
+                is UiState.Success -> {
+                    setLoadingState(false)
+                }
+
+                is UiState.Error -> {
+                    setLoadingState(false)
+                    Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                }
+
+                is UiState.Idle -> {}
+            }
         }
     }
 
@@ -137,10 +154,5 @@ class ProductsFragment : Fragment() {
         val bundle = Bundle()
         bundle.putParcelable("product", product)
         findNavController().navigate(R.id.action_productsFragment_to_addOrEditProductFragment, bundle)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

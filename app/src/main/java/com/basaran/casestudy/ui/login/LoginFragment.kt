@@ -6,29 +6,27 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.basaran.casestudy.R
 import com.basaran.casestudy.databinding.FragmentLoginBinding
+import com.basaran.casestudy.ui.base.BaseFragment
 import com.basaran.casestudy.utils.UiState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LoginFragment : Fragment() {
-
-    private var _binding: FragmentLoginBinding? = null
-    private val binding get() = _binding!!
+class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 
     private val viewModel: LoginViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentLoginBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun showLoading(isLoading: Boolean) {
+        binding.progressBar.isVisible = isLoading
+        binding.loginButton.isEnabled = !isLoading
+        binding.registerButton.isEnabled = !isLoading
+    }
+
+    override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentLoginBinding {
+        return FragmentLoginBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,26 +53,18 @@ class LoginFragment : Fragment() {
         viewModel.loginState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    binding.progressBar.isVisible = true
-                    binding.loginButton.isEnabled = false
+                    setLoadingState(true)
                 }
                 is UiState.Success -> {
-                    binding.progressBar.isVisible = false
-                    binding.loginButton.isEnabled = true
+                    setLoadingState(false)
                     findNavController().navigate(R.id.action_loginFragment_to_dashboardFragment)
                 }
                 is UiState.Error -> {
-                    binding.progressBar.isVisible = false
-                    binding.loginButton.isEnabled = true
+                    setLoadingState(false)
                     Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
                 }
                 is UiState.Idle -> {}
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 } 
