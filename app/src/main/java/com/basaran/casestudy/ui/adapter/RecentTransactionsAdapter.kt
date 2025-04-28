@@ -12,12 +12,12 @@ import java.util.Locale
 
 class RecentTransactionsAdapter(
     private val transactions: List<Transaction>,
-    private val products: List<Product>
+    private val products: List<Product>?
 ) : RecyclerView.Adapter<RecentTransactionsAdapter.TransactionViewHolder>() {
 
     inner class TransactionViewHolder(private val binding: ItemRecentTransactionBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(transaction: Transaction) {
-            val product = products.find { it.id == transaction.productId }
+            val product = products?.find { it.id == transaction.productId }
             val productName = product?.name ?: "Bilinmeyen Ürün"
 
             binding.transactionTypeTextView.text = transaction.type.name
