@@ -10,4 +10,6 @@
     <string name="min_stock">Minimum Stock</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

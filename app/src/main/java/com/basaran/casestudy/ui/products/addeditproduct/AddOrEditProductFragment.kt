@@ -45,7 +45,6 @@ class AddOrEditProductFragment : Fragment() {
         }
         setupViews()
         observeViewModel()
-        handleProductData()
     }
 
     private fun setupViews() {
@@ -84,10 +83,6 @@ class AddOrEditProductFragment : Fragment() {
                 showValidationErrors(errors)
             }
         }
-    }
-
-    private fun handleProductData() {
-
     }
 
     private fun saveProduct() {

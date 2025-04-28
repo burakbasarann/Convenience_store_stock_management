@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.basaran.casestudy.ui.login.LoginFragment"
-        android:label="LoginFragment">
+        android:label="Giriş Ekranı">
         <action
             android:id="@+id/action_loginFragment_to_dashboardFragment"
             app:destination="@id/dashboardFragment"
@@ -19,12 +19,12 @@
     <fragment
         android:id="@+id/dashboardFragment"
         android:name="com.basaran.casestudy.ui.dashboard.DashboardFragment"
-        android:label="DashboardFragment" />
+        android:label="Anasayfa" />
 
     <fragment
         android:id="@+id/productsFragment"
         android:name="com.basaran.casestudy.ui.products.ProductsFragment"
-        android:label="ProductsFragment">
+        android:label="Ürünler">
         <action
             android:id="@+id/action_productsFragment_to_addOrEditProductFragment"
             app:destination="@id/addOrEditProductFragment">
@@ -37,6 +37,24 @@
     <fragment
         android:id="@+id/addOrEditProductFragment"
         android:name="com.basaran.casestudy.ui.products.addeditproduct.AddOrEditProductFragment"
-        android:label="fragment_add_or_edit_product"
-        tools:layout="@layout/fragment_add_or_edit_product"/>
+        android:label="Ürün Ekle veya Düzenle"
+        tools:layout="@layout/fragment_add_or_edit_product" />
+    <fragment
+        android:id="@+id/suppliersFragment"
+        android:name="com.basaran.casestudy.ui.suppliers.SuppliersFragment"
+        android:label="Tedarikçiler"
+        tools:layout="@layout/fragment_suppliers">
+        <action
+            android:id="@+id/action_suppliersFragment_to_addOrEditSupplierFragment"
+            app:destination="@id/addOrEditSupplierFragment">
+            <argument
+                android:name="supplier"
+                app:argType="com.basaran.casestudy.data.model.Supplier" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/addOrEditSupplierFragment"
+        android:name="com.basaran.casestudy.ui.suppliers.addeditsupplier.AddOrEditSupplierFragment"
+        android:label="Tedarikçi Ekle veya Düzenle"
+        tools:layout="@layout/fragment_add_or_edit_supplier" />
 </navigation> 

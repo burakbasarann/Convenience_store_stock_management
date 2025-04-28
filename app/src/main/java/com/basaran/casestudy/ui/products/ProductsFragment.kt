@@ -94,6 +94,11 @@ class ProductsFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        isInEditMode = false
+    }
+
     private fun navigateToProductDetail(productId: Long) {  //TODO Product Detail
      //   val action = ProductsFragmentDirections.actionProductsFragmentToProductDetailFragment(productId)
      //   findNavController().navigate(action)

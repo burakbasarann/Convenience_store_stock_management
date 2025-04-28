@@ -8,13 +8,9 @@
         android:icon="@drawable/ic_products"
         android:title="Ürünler" />
     <item
-        android:id="@+id/nav_suppliers"
+        android:id="@+id/suppliersFragment"
         android:icon="@drawable/ic_suppliers"
         android:title="Tedarikçiler" />
-    <item
-        android:id="@+id/nav_stock"
-        android:icon="@drawable/ic_stock"
-        android:title="Stok" />
     <item
         android:id="@+id/nav_transactions"
         android:icon="@drawable/ic_transactions"
