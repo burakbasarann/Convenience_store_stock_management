@@ -45,4 +45,20 @@ class ProductsViewModel @Inject constructor(
             }
         }
     }
+
+    fun sortProductsAscending() {
+        _filteredProducts.value = _filteredProducts.value?.sortedBy { it.name } ?: emptyList()
+    }
+
+    fun sortProductsDescending() {
+        _filteredProducts.value = _filteredProducts.value?.sortedByDescending { it.name } ?: emptyList()
+    }
+
+    fun increasingPriceProduct() {
+        _filteredProducts.value = _filteredProducts.value?.sortedBy { it.price } ?: emptyList()
+    }
+
+    fun descreasingPriceProduct() {
+        _filteredProducts.value = _filteredProducts.value?.sortedByDescending { it.price } ?: emptyList()
+    }
 }

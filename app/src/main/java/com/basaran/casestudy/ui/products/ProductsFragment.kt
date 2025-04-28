@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -48,6 +50,30 @@ class ProductsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
+        val adapter = ArrayAdapter.createFromResource(requireContext(), R.array.filter_options_product, android.R.layout.simple_spinner_item)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.filterSpinner.adapter = adapter;
+
+        binding.filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parentView: AdapterView<*>?,
+                selectedItemView: View?,
+                position: Int,
+                id: Long
+            ) {
+                if (selectedItemView == null) return
+                when (position) {
+                    0 -> viewModel.sortProductsAscending()
+                    1 -> viewModel.sortProductsDescending()
+                    2 -> viewModel.increasingPriceProduct()
+                    3 -> viewModel.descreasingPriceProduct()
+                }
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+            }
+        }
+
         binding.productsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         productsAdapter = ProductsAdapter(
             onItemClick = { product ->

@@ -21,6 +21,7 @@ class ProductsAdapter(
         fun bind(product: Product) {
             binding.productNameTextView.text = product.name
             binding.productStockTextView.text = "Stock: ${product.currentStock}"
+            binding.productPriceEditText.text = "Price: ${product.price} ₺"
             binding.editImageView.visibility = if (isEditMode) View.VISIBLE else View.GONE
 
             binding.root.setOnClickListener {
