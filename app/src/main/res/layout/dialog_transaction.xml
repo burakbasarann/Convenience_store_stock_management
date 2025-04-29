@@ -7,25 +7,26 @@
     <Spinner
         android:id="@+id/spinnerTransactionType"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:hint="@string/transaction_type" />
 
     <EditText
         android:id="@+id/editTextProductId"
-        android:hint="Product ID"
+        android:hint="@string/product_id"
         android:inputType="number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <EditText
         android:id="@+id/editTextQuantity"
-        android:hint="Quantity"
+        android:hint="@string/quantity"
         android:inputType="number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <EditText
         android:id="@+id/editTextNotes"
-        android:hint="Notes"
+        android:hint="@string/notes"
         android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

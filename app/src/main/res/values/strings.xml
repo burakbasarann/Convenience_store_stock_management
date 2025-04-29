@@ -1,18 +1,33 @@
 <resources>
     <string name="app_name">Case Study</string>
-    <string name="product_name">Product Name</string>
-    <string name="description">Description</string>
-    <string name="price">Price</string>
-    <string name="currency_symbol">$</string> <!-- veya ₺ -->
-    <string name="category">Category</string>
-    <string name="barcode">Barcode</string>
-    <string name="current_stock">Current Stock</string>
-    <string name="min_stock">Minimum Stock</string>
-    <string name="cancel">Cancel</string>
-    <string name="save">Save</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="product_name">Ürün Adı</string>
+    <string name="description">Detay</string>
+    <string name="price">Fiyat</string>
+    <string name="currency_symbol">$</string>
+    <string name="category">Kategori</string>
+    <string name="barcode">Barkod</string>
+    <string name="current_stock">Mevcut Stok</string>
+    <string name="min_stock">Minimum Stok</string>
+    <string name="cancel">İptal</string>
+    <string name="save">Kaydet</string>
+    <string name="add_transaction">İşlem Ekle</string>
+    <string name="export_pdf">PDF</string>
+    <string name="export_csv">CSV</string>
+    <string name="new_transaction">Yeni İşlem Ekle</string>
+    <string name="transaction_type">İşlem Tipi</string>
+    <string name="product_id">Ürün ID</string>
+    <string name="quantity">Miktar</string>
+    <string name="notes">Not</string>
+    <string name="no_transactions">Çıktı Alınacak İşlem Yok</string>
+    <string name="pdf_export_success">PDF İşlemi Başarılı</string>
+    <string name="csv_export_success">CSV İşlemi Başarılı</string>
+    <string name="error_exporting_pdf">PDF İşlemi Başarısız: %1$s</string>
+    <string name="error_exporting_csv">CSV İşlemi Başarısız: %1$s</string>
+    <string name="unknown_product">Bilinmeyen Ürün</string>
+    <string name="transaction_report">İşlem Raporu</string>
+    <string name="date">Tarih</string>
+    <string name="type">Tip</string>
+    <string name="product">Ürün</string>
 
     <string-array name="filter_options">
     <item>A..Z</item>

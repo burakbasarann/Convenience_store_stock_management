@@ -59,6 +59,6 @@
         tools:layout="@layout/fragment_add_or_edit_supplier" />
     <fragment
         android:id="@+id/transactionFragment"
-        android:name="com.basaran.casestudy.ui.transactions.TransactionFragment"
+        android:name="com.basaran.casestudy.ui.transaction.TransactionFragment"
         android:label="İşlemler" />
 </navigation> 
