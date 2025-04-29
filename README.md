@@ -3,8 +3,8 @@
 Bu uygulama Market stok yönetimi amacıyla geliştirilmiş olup ürün takibi, tedarikçi yönetimi, satış/kayıt geçmişi gibi birçok özelliği içerisinde barındırır.
 
 ## 🚀 Kurulum
-https://drive.google.com/file/d/1wGqiVF8-wPSa0n3Rw48Q2C6t1F1OG-OK/view?usp=sharing
-Apk Dosyası EKte ki Linkte Mevcuttur.
+https://we.tl/t-AQmGr7vSmH
+Apk Dosyası Ekte ki Linkte Mevcuttur.
 
 ## 🛠️ Kullanılan Teknolojiler
 
