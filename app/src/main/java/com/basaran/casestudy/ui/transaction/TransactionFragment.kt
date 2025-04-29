@@ -1,4 +1,4 @@
-package com.basaran.casestudy.ui.transactions
+package com.basaran.casestudy.ui.transaction
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.basaran.casestudy.R
@@ -17,6 +19,8 @@ import com.basaran.casestudy.data.model.TransactionType
 import com.basaran.casestudy.databinding.FragmentTransactionBinding
 import com.basaran.casestudy.ui.adapter.RecentTransactionsAdapter
 import com.basaran.casestudy.ui.base.BaseFragment
+import com.basaran.casestudy.ui.transactions.TransactionViewModel
+import com.basaran.casestudy.utils.ExportUtils
 import com.basaran.casestudy.utils.UserManager
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,6 +31,29 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
     private lateinit var transactionAdapter: RecentTransactionsAdapter
     private var transactionsList: List<Transaction> = emptyList()
     private var productsList: List<Product> = emptyList()
+
+    private val createPdfFile = registerForActivityResult(ActivityResultContracts.CreateDocument("application/pdf")) { uri ->
+        uri?.let {
+            try {
+                ExportUtils.exportToPdf(requireContext(), transactionsList, productsList, it)
+                Toast.makeText(requireContext(), getString(R.string.pdf_export_success), Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), getString(R.string.error_exporting_pdf, e.message), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private val createCsvFile = registerForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { uri ->
+        uri?.let {
+            try {
+                ExportUtils.exportToCsv(requireContext(), transactionsList, productsList, it)
+                Toast.makeText(requireContext(), getString(R.string.csv_export_success), Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), getString(R.string.error_exporting_csv, e.message), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     override fun showLoading(isLoading: Boolean) {}
 
     override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentTransactionBinding {
@@ -39,6 +66,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
         setupRecyclerView()
         observeTransactionsAndProducts()
         setupAddTransactionButton()
+        setupExportButtons()
         viewModel.getAllTransactions()
         viewModel.getAllProducts()
     }
@@ -73,6 +101,24 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
         }
     }
 
+    private fun setupExportButtons() {
+        binding.buttonExportPdf.setOnClickListener {
+            if (transactionsList.isEmpty()) {
+                Toast.makeText(requireContext(), getString(R.string.no_transactions), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            createPdfFile.launch("transactions_${System.currentTimeMillis()}.pdf")
+        }
+
+        binding.buttonExportCsv.setOnClickListener {
+            if (transactionsList.isEmpty()) {
+                Toast.makeText(requireContext(), getString(R.string.no_transactions), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            createCsvFile.launch("transactions_${System.currentTimeMillis()}.csv")
+        }
+    }
+
     private fun showAddTransactionDialog() {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_transaction, null)
 
@@ -87,9 +133,9 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
         spinnerTransactionType.adapter = adapter
 
         AlertDialog.Builder(requireContext())
-            .setTitle("Yeni Transaction Ekle")
+            .setTitle(getString(R.string.new_transaction))
             .setView(dialogView)
-            .setPositiveButton("Kaydet") { dialog, _ ->
+            .setPositiveButton(getString(R.string.save)) { dialog, _ ->
                 val selectedType = TransactionType.valueOf(spinnerTransactionType.selectedItem as String)
                 val productId = editTextProductId.text.toString().toLongOrNull() ?: 0L
                 val quantity = editTextQuantity.text.toString().toIntOrNull() ?: 0
@@ -114,7 +160,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                 viewModel.updateProductStock(newTransaction.productId, quantityChange)
                 dialog.dismiss()
             }
-            .setNegativeButton("İptal") { dialog, _ ->
+            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
             .show()
