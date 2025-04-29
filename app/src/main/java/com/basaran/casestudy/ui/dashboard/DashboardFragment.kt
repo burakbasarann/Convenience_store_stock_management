@@ -5,11 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.basaran.casestudy.data.model.Product
-import com.basaran.casestudy.data.model.Transaction
 import com.basaran.casestudy.databinding.FragmentDashboardBinding
 import com.basaran.casestudy.ui.adapter.LowStockAdapter
 import com.basaran.casestudy.ui.adapter.RecentTransactionsAdapter
@@ -22,13 +19,10 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>() {
 
     private val viewModel: DashboardViewModel by viewModels()
     private lateinit var lowStockAdapter: LowStockAdapter
-    private lateinit var recentTransactionsAdapter: RecentTransactionsAdapter
-    private var filterProducts: List<Product> = emptyList()
-    private var allProducts: List<Product> = emptyList()
-    private var allTransactions: List<Transaction> = emptyList()
+    private lateinit var transactionsAdapter: RecentTransactionsAdapter
 
     override fun showLoading(isLoading: Boolean) {
-        binding.progressBar.isVisible = isLoading
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentDashboardBinding {
@@ -38,58 +32,49 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerViews()
-        observeViewModel()
+        setupObservers()
     }
 
     private fun setupRecyclerViews() {
-        binding.lowStockRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.recentTransactionsRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.recyclerViewLowStock.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.recyclerViewTransactions.layoutManager = LinearLayoutManager(requireContext())
     }
 
-    private fun observeViewModel() {
+    private fun setupObservers() {
         viewModel.lowStockProducts.observe(viewLifecycleOwner) { products ->
-            filterProducts = products
-            updateAdapter()
+            if (products.isEmpty()) {
+                binding.emptyLowStockContainer.visibility = View.VISIBLE
+                binding.recyclerViewLowStock.visibility = View.GONE
+            } else {
+                binding.emptyLowStockContainer.visibility = View.GONE
+                binding.recyclerViewLowStock.visibility = View.VISIBLE
+                lowStockAdapter = LowStockAdapter(products)
+                binding.recyclerViewLowStock.adapter = lowStockAdapter
+            }
         }
 
         viewModel.recentTransactions.observe(viewLifecycleOwner) { transactions ->
-            allTransactions = transactions
-            updateAdapter()
-        }
-
-        viewModel.allProducts.observe(viewLifecycleOwner) { allProductsDb ->
-            allProducts = allProductsDb
-            updateAdapter()
+            if (transactions.isEmpty()) {
+                binding.emptyTransactionsContainer.visibility = View.VISIBLE
+                binding.recyclerViewTransactions.visibility = View.GONE
+            } else {
+                binding.emptyTransactionsContainer.visibility = View.GONE
+                binding.recyclerViewTransactions.visibility = View.VISIBLE
+                transactionsAdapter = RecentTransactionsAdapter(transactions, viewModel.allProducts.value ?: emptyList())
+                binding.recyclerViewTransactions.adapter = transactionsAdapter
+            }
         }
 
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is UiState.Loading -> {
-                    setLoadingState(true)
-                }
-
-                is UiState.Success -> {
-                    setLoadingState(false)
-                }
-
+                is UiState.Loading -> showLoading(true)
+                is UiState.Success -> showLoading(false)
                 is UiState.Error -> {
-                    setLoadingState(false)
+                    showLoading(false)
                     Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
                 }
-
-                is UiState.Idle -> {}
+                else -> showLoading(false)
             }
-        }
-    }
-
-    private fun updateAdapter() {
-        if (allTransactions.isNotEmpty()) {
-            recentTransactionsAdapter = RecentTransactionsAdapter(allTransactions, allProducts)
-            binding.recentTransactionsRecyclerView.adapter = recentTransactionsAdapter
-        }
-        if (allProducts.isNotEmpty()) {
-            lowStockAdapter = LowStockAdapter(filterProducts)
-            binding.lowStockRecyclerView.adapter = lowStockAdapter
         }
     }
 } 

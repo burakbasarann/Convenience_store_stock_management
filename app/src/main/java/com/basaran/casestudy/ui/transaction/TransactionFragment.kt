@@ -1,13 +1,14 @@
 package com.basaran.casestudy.ui.transaction
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
@@ -22,6 +23,7 @@ import com.basaran.casestudy.ui.base.BaseFragment
 import com.basaran.casestudy.ui.transactions.TransactionViewModel
 import com.basaran.casestudy.utils.ExportUtils
 import com.basaran.casestudy.utils.UserManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,6 +33,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
     private lateinit var transactionAdapter: RecentTransactionsAdapter
     private var transactionsList: List<Transaction> = emptyList()
     private var productsList: List<Product> = emptyList()
+    private var selectedProductPosition: Int = 0
 
     private val createPdfFile = registerForActivityResult(ActivityResultContracts.CreateDocument("application/pdf")) { uri ->
         uri?.let {
@@ -120,24 +123,45 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
     }
 
     private fun showAddTransactionDialog() {
-        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_transaction, null)
-
+        val dialogView = layoutInflater.inflate(R.layout.dialog_add_transaction, null)
         val spinnerTransactionType = dialogView.findViewById<Spinner>(R.id.spinnerTransactionType)
-        val editTextProductId = dialogView.findViewById<EditText>(R.id.editTextProductId)
+        val spinnerProduct = dialogView.findViewById<Spinner>(R.id.spinnerProduct)
         val editTextQuantity = dialogView.findViewById<EditText>(R.id.editTextQuantity)
         val editTextNotes = dialogView.findViewById<EditText>(R.id.editTextNotes)
+        val textViewCurrentStock = dialogView.findViewById<TextView>(R.id.textViewCurrentStock)
 
         val types = TransactionType.entries.map { it.name }
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, types)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerTransactionType.adapter = adapter
+        val typeAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, types)
+        typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerTransactionType.adapter = typeAdapter
 
-        AlertDialog.Builder(requireContext())
+        val products = viewModel.products.value ?: emptyList()
+        val productAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            products.map { "${it.name} (ID: ${it.id})" }
+        )
+        productAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerProduct.adapter = productAdapter
+
+        spinnerProduct.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                selectedProductPosition = position
+                val selectedProduct = products[position]
+                textViewCurrentStock.text = "Mevcut Stok: ${selectedProduct.currentStock}"
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                textViewCurrentStock.text = "Mevcut Stok: -"
+            }
+        }
+
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.new_transaction))
             .setView(dialogView)
             .setPositiveButton(getString(R.string.save)) { dialog, _ ->
                 val selectedType = TransactionType.valueOf(spinnerTransactionType.selectedItem as String)
-                val productId = editTextProductId.text.toString().toLongOrNull() ?: 0L
+                val selectedProduct = products[selectedProductPosition]
                 val quantity = editTextQuantity.text.toString().toIntOrNull() ?: 0
                 val notes = editTextNotes.text.toString()
 
@@ -145,7 +169,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                     date = System.currentTimeMillis(),
                     userId = UserManager.getUserId(),
                     type = selectedType,
-                    productId = productId,
+                    productId = selectedProduct.id,
                     quantity = quantity,
                     notes = notes
                 )

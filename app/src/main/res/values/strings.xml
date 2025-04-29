@@ -1,6 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Case Study</string>
+    <string name="login">Giriş Yap</string>
+    <string name="register">Kayıt Ol</string>
+    <string name="email">E-posta</string>
+    <string name="password">Şifre</string>
+    <string name="name">Ad Soyad</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="products">Ürünler</string>
+    <string name="suppliers">Tedarikçiler</string>
+    <string name="transactions">İşlemler</string>
+    <string name="settings">Ayarlar</string>
+    <string name="logout">Çıkış Yap</string>
+    <string name="add_product">Ürün Ekle</string>
+    <string name="edit_product">Ürün Düzenle</string>
+    <string name="delete_product">Ürün Sil</string>
     <string name="product_name">Ürün Adı</string>
+    <string name="product_description">Ürün Açıklaması</string>
+    <string name="product_price">Ürün Fiyatı</string>
+    <string name="product_category">Ürün Kategorisi</string>
+    <string name="product_barcode">Ürün Barkodu</string>
+    <string name="product_supplier">Ürün Tedarikçisi</string>
+    <string name="product_stock">Ürün Stok</string>
+    <string name="product_min_stock">Ürün Minimum Stok</string>
+    <string name="save">Kaydet</string>
+    <string name="cancel">İptal</string>
+    <string name="delete">Sil</string>
+    <string name="edit">Düzenle</string>
+    <string name="search">Ara</string>
+    <string name="filter">Filtrele</string>
+    <string name="sort">Sırala</string>
+    <string name="export">Dışa Aktar</string>
+    <string name="import_data">İçe Aktar</string>
+    <string name="about">Hakkında</string>
+    <string name="version">Versiyon</string>
+    <string name="developer">Geliştirici</string>
+    <string name="contact">İletişim</string>
+    <string name="privacy_policy">Gizlilik Politikası</string>
+    <string name="terms_of_service">Kullanım Koşulları</string>
+    <string name="low_stock_products">Düşük Stoklu Ürünler</string>
+    <string name="no_low_stock_products">Düşük stoklu ürün bulunmamaktadır</string>
+    <string name="recent_transactions">Son İşlemler</string>
+    <string name="no_transactions">Henüz işlem bulunmamaktadır</string>
+    <string name="add_transaction">İşlem Ekle</string>
     <string name="description">Detay</string>
     <string name="price">Fiyat</string>
     <string name="currency_symbol">$</string>
@@ -8,17 +50,11 @@
     <string name="barcode">Barkod</string>
     <string name="current_stock">Mevcut Stok</string>
     <string name="min_stock">Minimum Stok</string>
-    <string name="cancel">İptal</string>
-    <string name="save">Kaydet</string>
-    <string name="add_transaction">İşlem Ekle</string>
-    <string name="export_pdf">PDF</string>
-    <string name="export_csv">CSV</string>
     <string name="new_transaction">Yeni İşlem Ekle</string>
     <string name="transaction_type">İşlem Tipi</string>
     <string name="product_id">Ürün ID</string>
     <string name="quantity">Miktar</string>
     <string name="notes">Not</string>
-    <string name="no_transactions">Çıktı Alınacak İşlem Yok</string>
     <string name="pdf_export_success">PDF İşlemi Başarılı</string>
     <string name="csv_export_success">CSV İşlemi Başarılı</string>
     <string name="error_exporting_pdf">PDF İşlemi Başarısız: %1$s</string>
@@ -28,10 +64,12 @@
     <string name="date">Tarih</string>
     <string name="type">Tip</string>
     <string name="product">Ürün</string>
+    <string name="export_pdf">PDF</string>
+    <string name="export_csv">CSV</string>
 
     <string-array name="filter_options">
-    <item>A..Z</item>
-    <item>Z..A</item>
+        <item>A..Z</item>
+        <item>Z..A</item>
     </string-array>
 
     <string-array name="filter_options_product">

@@ -10,7 +10,6 @@ import com.basaran.casestudy.data.model.Product
 import com.basaran.casestudy.databinding.ItemProductBinding
 
 class ProductsAdapter(
-    private val onItemClick: (Product) -> Unit,
     private val onEditClick: (Product) -> Unit
 ) : ListAdapter<Product, ProductsAdapter.ProductViewHolder>(DiffCallback()) {
 
@@ -22,12 +21,9 @@ class ProductsAdapter(
             binding.productNameTextView.text = product.name
             binding.productStockTextView.text = "Stok: ${product.currentStock} - Minimum Stok: ${product.minStock}"
             binding.productPriceEditText.text = "Price: ${product.price} ₺"
-            binding.productId.text = "Product: ${product.id}"
+            binding.productId.text = "Product ID: ${product.id}"
             binding.editImageView.visibility = if (isEditMode) View.VISIBLE else View.GONE
 
-            binding.root.setOnClickListener {
-                onItemClick(product)
-            }
             binding.editImageView.setOnClickListener {
                 onEditClick(product)
             }

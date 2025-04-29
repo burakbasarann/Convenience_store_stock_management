@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,7 +29,7 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>() {
     private var isInEditMode = false
 
     override fun showLoading(isLoading: Boolean) {
-        binding.progressBar.isVisible = isLoading
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentProductsBinding {
@@ -41,7 +40,7 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-        observeViewModel()
+        setupObservers()
         setupSearch()
         setupAddProductButton()
         setupEditProductButton()
@@ -74,9 +73,6 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>() {
 
         binding.productsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         productsAdapter = ProductsAdapter(
-            onItemClick = { product ->
-                navigateToProductDetail(product.id)
-            },
             onEditClick = { product ->
                 navigateToEditProduct(product)
             }
@@ -84,7 +80,7 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>() {
         binding.productsRecyclerView.adapter = productsAdapter
     }
 
-    private fun observeViewModel() {
+    private fun setupObservers() {
         viewModel.products.observe(viewLifecycleOwner) { products ->
             productsAdapter.submitList(products)
         }
@@ -94,19 +90,12 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>() {
 
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is UiState.Loading -> {
-                    setLoadingState(true)
-                }
-
-                is UiState.Success -> {
-                    setLoadingState(false)
-                }
-
+                is UiState.Loading -> showLoading(true)
+                is UiState.Success -> showLoading(false)
                 is UiState.Error -> {
-                    setLoadingState(false)
+                    showLoading(false)
                     Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
                 }
-
                 is UiState.Idle -> {}
             }
         }
@@ -145,14 +134,11 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>() {
         isInEditMode = false
     }
 
-    private fun navigateToProductDetail(productId: Long) {  //TODO Product Detail
-     //   val action = ProductsFragmentDirections.actionProductsFragmentToProductDetailFragment(productId)
-     //   findNavController().navigate(action)
-    }
-
     private fun navigateToEditProduct(product: Product) {
         val bundle = Bundle()
         bundle.putParcelable("product", product)
-        findNavController().navigate(R.id.action_productsFragment_to_addOrEditProductFragment, bundle)
+        findNavController().navigate(
+            ProductsFragmentDirections.actionProductsFragmentToAddOrEditProductFragment(product)
+        )
     }
 }

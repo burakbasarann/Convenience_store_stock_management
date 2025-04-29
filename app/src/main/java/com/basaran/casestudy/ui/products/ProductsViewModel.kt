@@ -34,7 +34,6 @@ class ProductsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             try {
-                _uiState.postValue(UiState.Loading)
                 delay(300)
                 productRepository.seedInitialData(UserManager.getUserId())
                 productRepository.getAllProducts(UserManager.getUserId()).collect { allProducts ->

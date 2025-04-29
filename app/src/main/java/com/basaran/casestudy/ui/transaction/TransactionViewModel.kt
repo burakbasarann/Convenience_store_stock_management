@@ -3,12 +3,12 @@ package com.basaran.casestudy.ui.transactions
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.basaran.casestudy.data.model.Product
 import com.basaran.casestudy.data.model.Transaction
 import com.basaran.casestudy.repository.product.ProductRepository
 import com.basaran.casestudy.repository.transaction.TransactionRepository
+import com.basaran.casestudy.utils.NotificationService
 import com.basaran.casestudy.utils.UiState
 import com.basaran.casestudy.utils.UserManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,6 +22,7 @@ import javax.inject.Inject
 class TransactionViewModel @Inject constructor(
     private val transactionRepository: TransactionRepository,
     private val productRepository: ProductRepository,
+    private val notificationService: NotificationService
 ) : ViewModel() {
 
     private val _transactions = MutableLiveData<List<Transaction>>()
@@ -32,6 +33,11 @@ class TransactionViewModel @Inject constructor(
 
     private val _products = MutableLiveData<List<Product>>()
     val products: LiveData<List<Product>> get() = _products
+
+    init {
+        getAllProducts()
+        getAllTransactions()
+    }
 
     fun getAllTransactions() {
         viewModelScope.launch {
@@ -69,6 +75,13 @@ class TransactionViewModel @Inject constructor(
                 val updatedStock = it.currentStock + quantityChange
                 val updatedProduct = it.copy(currentStock = updatedStock)
                 productRepository.updateProduct(updatedProduct)
+                if (it.currentStock > it.minStock && updatedStock <= updatedProduct.minStock) {
+                    notificationService.showLowStockNotification(
+                        productName = updatedProduct.name,
+                        currentStock = updatedStock,
+                        minStock = updatedProduct.minStock
+                    )
+                }
             }
         }
     }
