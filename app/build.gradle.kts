@@ -91,8 +91,8 @@ dependencies {
     testImplementation(libs.truth)
     testImplementation(libs.coroutines.core)
     testImplementation(libs.coroutines.android)
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
-    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.arch)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

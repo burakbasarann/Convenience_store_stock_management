@@ -21,6 +21,7 @@ commonsCsv = "1.10.0"
 mockk = "1.13.8"
 turbine = "1.0.0"
 truth = "1.1.5"
+archtest = "2.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -52,6 +53,8 @@ commons-csv = { group = "org.apache.commons", name = "commons-csv", version.ref 
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
+arch = { group = "androidx.arch.core", name = "core-testing", version.ref = "archtest"}
+coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
